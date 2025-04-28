@@ -135,11 +135,35 @@ void Renderer::Render()
     m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
 }
 
-void Renderer::Cleanup()
+void Renderer::Release()
 {
+    // GPUがすべてのコマンドを完了するまで待機
+    if (m_commandQueue && m_fence && m_fenceEvent)
+    {
+        m_commandQueue->Signal(m_fence.Get(), m_fenceValue);
+        m_fence->SetEventOnCompletion(m_fenceValue, m_fenceEvent);
+        WaitForSingleObject(m_fenceEvent, INFINITE);
+        m_fenceValue++;
+    }
+
+    // フェンスイベントを閉じる
     if (m_fenceEvent)
     {
         CloseHandle(m_fenceEvent);
         m_fenceEvent = nullptr;
     }
+
+    // 順番に解放（ComPtrなので Releaseは不要。nullptrで安全に消える）
+    m_commandList.Reset();
+    m_commandAllocator.Reset();
+    m_fence.Reset();
+    m_rtvHeap.Reset();
+    for (int i = 0; i < 2; ++i)
+    {
+        m_renderTargets[i].Reset();
+    }
+    m_swapChain.Reset();
+    m_commandQueue.Reset();
+    m_device.Reset();
 }
+

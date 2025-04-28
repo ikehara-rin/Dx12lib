@@ -17,7 +17,7 @@ public:
 
     bool Initialize(HWND hWnd);  // DirectX12初期化
     void Render();               // フレーム描画
-    void Cleanup();              // リソース開放
+    void Release();              // リソース開放
 
 private:
     bool InitD3D12(HWND hWnd);
