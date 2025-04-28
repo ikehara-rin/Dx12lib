@@ -3,10 +3,6 @@
   "WorkspaceRootPath": "C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\Renderer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|solutionrelative:Renderer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\Renderer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|solutionrelative:Renderer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
@@ -15,8 +11,8 @@
       "RelativeMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|solutionrelative:Dx12App.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\Dx12App.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|solutionrelative:Dx12App.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\Renderer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|solutionrelative:Renderer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 256,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -46,54 +42,41 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "Renderer.cpp",
               "DocumentMoniker": "C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\Renderer.cpp",
               "RelativeDocumentMoniker": "Renderer.cpp",
               "ToolTip": "C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\Renderer.cpp",
               "RelativeToolTip": "Renderer.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAGYAAAAHAAAAAAAAAA==",
+              "ViewState": "AgIAACoAAAAAAAAAAAAqwCQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-04-28T10:46:45.383Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "Renderer.h",
               "DocumentMoniker": "C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\Renderer.h",
               "RelativeDocumentMoniker": "Renderer.h",
               "ToolTip": "C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\Renderer.h",
               "RelativeToolTip": "Renderer.h",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAAACEAAAAcAAAAAAAAAA==",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAAUAAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-04-28T10:46:34.527Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "Dx12App.cpp",
               "DocumentMoniker": "C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\Dx12App.cpp",
               "RelativeDocumentMoniker": "Dx12App.cpp",
               "ToolTip": "C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\Dx12App.cpp",
               "RelativeToolTip": "Dx12App.cpp",
-              "ViewState": "AgIAAAoAAAAAAAAAAAAiwDoAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAADgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-04-26T12:41:01.17Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Dx12App.h",
-              "DocumentMoniker": "C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\Dx12App.h",
-              "RelativeDocumentMoniker": "Dx12App.h",
-              "ToolTip": "C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\Dx12App.h",
-              "RelativeToolTip": "Dx12App.h",
-              "ViewState": "AgIAABIAAAAAAAAAAAAAABkAAAAVAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-04-26T12:36:49.37Z",
               "EditorCaption": ""
             }
           ]

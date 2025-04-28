@@ -4,45 +4,7 @@
 Renderer::Renderer()
     : m_fenceValue(0), m_frameIndex(0), m_fenceEvent(nullptr)
 {
-    // コマンドアロケータをリセット（前フレームの記録をクリア）
-    m_commandAllocator->Reset();
-
-    // コマンドリストをリセット（再びコマンドを記録できるようにする）
-    m_commandList->Reset(m_commandAllocator.Get(), nullptr);
-
-    // ★レンダーターゲット設定
-    D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = m_rtvHeap->GetCPUDescriptorHandleForHeapStart();
-    rtvHandle.ptr += m_frameIndex * m_rtvDescriptorSize;
-
-    m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
-
-    // ★クリア処理（背景色を指定してバッファをリセット）
-    const float clearColor[] = { 0.1f, 0.2f, 0.4f, 1.0f }; // R,G,B,A
-    m_commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
-
-    // ★コマンドリストをクローズ（コマンド記録終了）
-    m_commandList->Close();
-
-    // ★コマンドリストをGPUに送信
-    ID3D12CommandList* ppCommandLists[] = { m_commandList.Get() };
-    m_commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
-
-    // ★スワップチェインのバッファを切り替え（表示する）
-    m_swapChain->Present(1, 0);
-
-    // ★フェンスを使ってGPUの終了待ち
-    const UINT64 fence = m_fenceValue;
-    m_commandQueue->Signal(m_fence.Get(), fence);
-    m_fenceValue++;
-
-    if (m_fence->GetCompletedValue() < fence)
-    {
-        m_fence->SetEventOnCompletion(fence, m_fenceEvent);
-        WaitForSingleObject(m_fenceEvent, INFINITE);
-    }
-
-    // ★現在のフレームインデックスを更新
-    m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
+    
 }
 
 Renderer::~Renderer()
@@ -132,7 +94,45 @@ bool Renderer::InitD3D12(HWND hWnd)
 
 void Renderer::Render()
 {
-    // 簡単なRenderのサンプル（クリアだけ）
+    // コマンドアロケータをリセット（前フレームの記録をクリア）
+    m_commandAllocator->Reset();
+
+    // コマンドリストをリセット（再びコマンドを記録できるようにする）
+    m_commandList->Reset(m_commandAllocator.Get(), nullptr);
+
+    // ★レンダーターゲット設定
+    D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = m_rtvHeap->GetCPUDescriptorHandleForHeapStart();
+    rtvHandle.ptr += m_frameIndex * m_rtvDescriptorSize;
+
+    m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
+
+    // ★クリア処理（背景色を指定してバッファをリセット）
+    const float clearColor[] = { 0.1f, 0.2f, 0.4f, 1.0f }; // R,G,B,A
+    m_commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+
+    // ★コマンドリストをクローズ（コマンド記録終了）
+    m_commandList->Close();
+
+    // ★コマンドリストをGPUに送信
+    ID3D12CommandList* ppCommandLists[] = { m_commandList.Get() };
+    m_commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+
+    // ★スワップチェインのバッファを切り替え（表示する）
+    m_swapChain->Present(1, 0);
+
+    // ★フェンスを使ってGPUの終了待ち
+    const UINT64 fence = m_fenceValue;
+    m_commandQueue->Signal(m_fence.Get(), fence);
+    m_fenceValue++;
+
+    if (m_fence->GetCompletedValue() < fence)
+    {
+        m_fence->SetEventOnCompletion(fence, m_fenceEvent);
+        WaitForSingleObject(m_fenceEvent, INFINITE);
+    }
+
+    // ★現在のフレームインデックスを更新
+    m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
 }
 
 void Renderer::Cleanup()
