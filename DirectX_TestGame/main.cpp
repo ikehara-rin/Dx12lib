@@ -3,6 +3,7 @@
 #include <d3d12.h>
 #include <dxgi1_6.h>
 #include <cassert>
+#include "d3dx12.h"
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
@@ -14,6 +15,13 @@ HWND g_hWnd = nullptr;
 ComPtr<ID3D12Device> g_device;
 ComPtr<ID3D12CommandQueue> g_commandQueue;
 ComPtr<IDXGISwapChain3> g_swapChain;
+
+// 追加（コマンドアロケータ）
+ComPtr<ID3D12CommandAllocator> g_commandAllocator;
+ComPtr<ID3D12GraphicsCommandList> g_commandList;
+ComPtr<ID3D12DescriptorHeap> g_rtvHeap;
+ComPtr<ID3D12Resource> g_renderTargets[2];
+UINT g_rtvDescriptorSize;
 
 // ウィンドウプロシージャ
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -85,6 +93,56 @@ void InitD3D12()
 
         swapChain1.As(&g_swapChain); // バージョンアップ
     }
+
+    // コマンドアロケータ作成
+    HRESULT hr = g_device->CreateCommandAllocator(
+        D3D12_COMMAND_LIST_TYPE_DIRECT,
+        IID_PPV_ARGS(&g_commandAllocator)
+    );
+    assert(SUCCEEDED(hr));
+
+    // コマンドリスト作成
+    hr = g_device->CreateCommandList(
+        0,
+        D3D12_COMMAND_LIST_TYPE_DIRECT,
+        g_commandAllocator.Get(),
+        nullptr,
+        IID_PPV_ARGS(&g_commandList)
+    );
+    assert(SUCCEEDED(hr));
+
+    // ここでコマンドリストは開いているので閉じる必要あり
+    g_commandList->Close();
+
+    // RTV用ディスクリプタヒープ作成
+    {
+        D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
+        heapDesc.NumDescriptors = 2;
+        heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+        heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+        hr = g_device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&g_rtvHeap));
+        assert(SUCCEEDED(hr));
+        g_rtvDescriptorSize = g_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+    }
+
+    // スワップチェインのバッファ取得＆RTV作成
+    {
+        // 基本ハンドルを取得
+        D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = g_rtvHeap->GetCPUDescriptorHandleForHeapStart();
+
+        // インデックス分だけオフセットする
+        rtvHandle.ptr += g_swapChain->GetCurrentBackBufferIndex() * g_rtvDescriptorSize;
+
+        for (UINT i = 0; i < 2; ++i)
+        {
+            hr = g_swapChain->GetBuffer(i, IID_PPV_ARGS(&g_renderTargets[i]));
+            assert(SUCCEEDED(hr));
+
+            g_device->CreateRenderTargetView(g_renderTargets[i].Get(), nullptr, rtvHandle);
+            rtvHandle.Offset(1, g_rtvDescriptorSize);
+        }
+    }
+
 }
 
 // エントリーポイント
