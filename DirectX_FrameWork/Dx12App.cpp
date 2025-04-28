@@ -1,58 +1,56 @@
-// Dx12App.cpp
-#include "Dx12App.h"
+#include <windows.h>
 #include "Renderer.h"
-#include <stdexcept>    // 例外用（失敗時 throw 用）
 
-Dx12App::Dx12App()
-    : width_(0), height_(0), renderer_(nullptr)
-{
-}
+Renderer g_renderer;
 
-Dx12App::~Dx12App()
+LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
 {
-    if (renderer_)
+    WNDCLASSEX wc = { sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0L, 0L,
+                      hInstance, nullptr, nullptr, nullptr, nullptr,
+                      L"DX12Sample", nullptr };
+    RegisterClassEx(&wc);
+
+    HWND hWnd = CreateWindow(wc.lpszClassName, L"DirectX12 Framework",
+        WS_OVERLAPPEDWINDOW, 100, 100, 800, 600,
+        nullptr, nullptr, wc.hInstance, nullptr);
+
+    if (!g_renderer.Initialize(hWnd))
     {
-        delete renderer_;
+        MessageBox(nullptr, L"Renderer Initialization Failed!", L"Error", MB_OK);
+        return 0;
     }
+
+    ShowWindow(hWnd, nCmdShow);
+    UpdateWindow(hWnd);
+
+    MSG msg = {};
+    while (msg.message != WM_QUIT)
+    {
+        if (PeekMessage(&msg, nullptr, 0U, 0U, PM_REMOVE))
+        {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+        else
+        {
+            g_renderer.Render();
+        }
+    }
+
+    g_renderer.Cleanup();
+    UnregisterClass(wc.lpszClassName, wc.hInstance);
+    return 0;
 }
 
-bool Dx12App::Initialize(HWND hwnd, int width, int height)
+LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-    // ウィンドウサイズを保存
-    width_ = width;
-    height_ = height;
-
-    // 各種初期化処理を順番に実行
-    CreateDevice();
-    CreateCommandQueue();
-    CreateSwapChain(hwnd, width, height);
-
-    // Rendererを初期化
-    renderer_ = new Renderer(device_.Get(), commandQueue_.Get(), swapChain_.Get());
-    renderer_->Initialize();
-
-    return true;
+    switch (msg)
+    {
+    case WM_DESTROY:
+        PostQuitMessage(0);
+        return 0;
+    }
+    return DefWindowProc(hWnd, msg, wParam, lParam);
 }
-
-void Dx12App::Update()
-{
-    // ゲームロジックやアニメーション更新処理（後で追加）
-}
-
-void Dx12App::Render()
-{
-    // レンダリング処理
-    renderer_->Render();
-}
-
-void Dx12App::Finalize()
-{
-    // リソース解放
-    renderer_->Finalize();
-    delete renderer_;
-    renderer_ = nullptr;
-}
-
-// ==========================
-// 以下、内部初期化関数
-// ==========================

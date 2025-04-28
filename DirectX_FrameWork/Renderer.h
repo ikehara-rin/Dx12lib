@@ -1,37 +1,38 @@
-// Renderer.h
 #pragma once
-#ifndef RENDERER_H
-#define RENDERER_H
 
+#include <windows.h>
 #include <wrl.h>
 #include <d3d12.h>
 #include <dxgi1_6.h>
-#include <vector>
+#include <d3dx12.h> // ヘルパー
 
+using Microsoft::WRL::ComPtr;
+
+// レンダラークラス（DirectX12の初期化・描画管理）
 class Renderer
 {
 public:
-    Renderer(ID3D12Device* device, ID3D12CommandQueue* commandQueue, IDXGISwapChain4* swapChain);
+    Renderer();
     ~Renderer();
 
-    void Initialize();
-    void Render();
-    void Finalize();
+    bool Initialize(HWND hWnd);  // DirectX12初期化
+    void Render();               // フレーム描画
+    void Cleanup();              // リソース開放
 
 private:
-    void CreateRenderTargetView();
-    void CreateCommandAllocatorAndList();
+    bool InitD3D12(HWND hWnd);
 
-    Microsoft::WRL::ComPtr<ID3D12Device> device_;
-    Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue_;
-    Microsoft::WRL::ComPtr<IDXGISwapChain4> swapChain_;
+    ComPtr<ID3D12Device> m_device;
+    ComPtr<IDXGISwapChain3> m_swapChain;
+    ComPtr<ID3D12CommandQueue> m_commandQueue;
+    ComPtr<ID3D12DescriptorHeap> m_rtvHeap;
+    ComPtr<ID3D12Resource> m_renderTargets[2];
+    ComPtr<ID3D12CommandAllocator> m_commandAllocator;
+    ComPtr<ID3D12GraphicsCommandList> m_commandList;
+    ComPtr<ID3D12Fence> m_fence;
+    HANDLE m_fenceEvent;
+    UINT64 m_fenceValue;
 
-    Microsoft::WRL::ComPtr<ID3D12CommandAllocator> commandAllocator_;
-    Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList_;
-    Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvHeap_;
-
-    std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>> renderTargets_;
-    UINT rtvDescriptorSize_;
+    UINT m_rtvDescriptorSize;
+    UINT m_frameIndex;
 };
-
-#endif // RENDERER_H
