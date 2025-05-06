@@ -4,7 +4,7 @@
 #include <wrl.h>
 #include <d3d12.h>
 #include <dxgi1_6.h>
-#include <d3dx12.h> // ヘルパー
+
 
 using Microsoft::WRL::ComPtr;
 
@@ -16,11 +16,19 @@ public:
     ~Renderer();
 
     bool Initialize(HWND hWnd);  // DirectX12初期化
+    void BeginRender();
+    void EndRender();
     void Render();               // フレーム描画
     void Release();              // リソース開放
 
 private:
     bool InitD3D12(HWND hWnd);
+    bool CreateCommandObjects();
+    bool CreateSwapChain(HWND hwnd);
+    bool CreateRnderTargetViews();
+
+private:
+    static const UINT FrameCount = 2;
 
     ComPtr<ID3D12Device> m_device;
     ComPtr<IDXGISwapChain3> m_swapChain;
