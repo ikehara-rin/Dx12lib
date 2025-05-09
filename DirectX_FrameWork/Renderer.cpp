@@ -1,188 +1,159 @@
 #include "Renderer.h"
 #include <stdexcept>
+#include <cassert>
 
-Renderer::Renderer()
-    : m_fenceValue(0), 
-    m_frameIndex(0),
-    m_fenceEvent(nullptr),
-    m_rtvDescriptorSize(0)
-{
-    
+Renderer::Renderer(HWND hwnd, uint32_t width, uint32_t height) {
+    Initialize();
+    CreateDevice();
+    CreateCommandQueue();
+    CreateSwapChain(hwnd, width, height);
+    CreateDescriptorHeap();
+    CreateRenderTargetViews();
+    CreateCommandAllocatorsAndList();
+    CreateFence();
 }
 
-Renderer::~Renderer()
-{
-    Release();
-    
+Renderer::~Renderer() {
+    WaitForGPU();
+    CloseHandle(fenceEvent_);
 }
 
-bool Renderer::Initialize(HWND hWnd)
-{
-    if (!InitD3D12(hWnd))
-        return false;
-    return true;
+void Renderer::Initialize() {
+    // Debug layer (省略可能)
+#if defined(_DEBUG)
+    Microsoft::WRL::ComPtr<ID3D12Debug> debug;
+    if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debug)))) {
+        debug->EnableDebugLayer();
+    }
+#endif
 }
 
-void Renderer::BeginRender() 
-{
-    // コマンドアロケータとコマンドリストをリセット
-    m_commandAllocator->Reset();
-    m_commandList->Reset(m_commandAllocator.Get(), nullptr);
+void Renderer::CreateDevice() {
+    Microsoft::WRL::ComPtr<IDXGIFactory6> factory;
+    CreateDXGIFactory1(IID_PPV_ARGS(&factory));
 
-    // バックバッファのリソースバリアをPresent → RenderTargetに遷移
+    Microsoft::WRL::ComPtr<IDXGIAdapter1> adapter;
+    for (UINT i = 0; DXGI_ERROR_NOT_FOUND != factory->EnumAdapters1(i, &adapter); ++i) {
+        DXGI_ADAPTER_DESC1 desc;
+        adapter->GetDesc1(&desc);
+
+        if (desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE) continue;
+
+        if (SUCCEEDED(D3D12CreateDevice(adapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&device_)))) {
+            break;
+        }
+    }
+    assert(device_ && "Failed to create D3D12 device.");
+}
+
+void Renderer::CreateCommandQueue() {
+    D3D12_COMMAND_QUEUE_DESC desc = {};
+    desc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+    desc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
+
+    device_->CreateCommandQueue(&desc, IID_PPV_ARGS(&commandQueue_));
+}
+
+void Renderer::CreateSwapChain(HWND hwnd, uint32_t width, uint32_t height) {
+    Microsoft::WRL::ComPtr<IDXGIFactory4> factory;
+    CreateDXGIFactory1(IID_PPV_ARGS(&factory));
+
+    DXGI_SWAP_CHAIN_DESC1 scDesc = {};
+    scDesc.BufferCount = FrameCount;
+    scDesc.Width = width;
+    scDesc.Height = height;
+    scDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    scDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+    scDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+    scDesc.SampleDesc.Count = 1;
+
+    Microsoft::WRL::ComPtr<IDXGISwapChain1> swapChain;
+    factory->CreateSwapChainForHwnd(commandQueue_.Get(), hwnd, &scDesc, nullptr, nullptr, &swapChain);
+    swapChain.As(&swapChain_);
+    frameIndex_ = swapChain_->GetCurrentBackBufferIndex();
+}
+
+void Renderer::CreateDescriptorHeap() {
+    D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
+    heapDesc.NumDescriptors = FrameCount;
+    heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+    heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+
+    device_->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&rtvHeap_));
+    rtvDescriptorSize_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+}
+
+void Renderer::CreateRenderTargetViews() {
+    D3D12_CPU_DESCRIPTOR_HANDLE handle = rtvHeap_->GetCPUDescriptorHandleForHeapStart();
+
+    for (UINT i = 0; i < FrameCount; ++i) {
+        swapChain_->GetBuffer(i, IID_PPV_ARGS(&renderTargets_[i]));
+        device_->CreateRenderTargetView(renderTargets_[i].Get(), nullptr, handle);
+        handle.ptr += rtvDescriptorSize_;
+    }
+}
+
+void Renderer::CreateCommandAllocatorsAndList() {
+    for (UINT i = 0; i < FrameCount; ++i) {
+        device_->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocators_[i]));
+    }
+
+    device_->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocators_[frameIndex_].Get(), nullptr, IID_PPV_ARGS(&commandList_));
+    commandList_->Close();
+}
+
+void Renderer::CreateFence() {
+    device_->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence_));
+    fenceEvent_ = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+    assert(fenceEvent_);
+}
+
+void Renderer::WaitForGPU() {
+    const UINT64 fenceValue = ++fenceValues_[frameIndex_];
+    commandQueue_->Signal(fence_.Get(), fenceValue);
+
+    if (fence_->GetCompletedValue() < fenceValue) {
+        fence_->SetEventOnCompletion(fenceValue, fenceEvent_);
+        WaitForSingleObject(fenceEvent_, INFINITE);
+    }
+
+    frameIndex_ = swapChain_->GetCurrentBackBufferIndex();
+}
+
+void Renderer::Render() {
+    // Reset
+    commandAllocators_[frameIndex_]->Reset();
+    commandList_->Reset(commandAllocators_[frameIndex_].Get(), nullptr);
+
+    // Transition
     D3D12_RESOURCE_BARRIER barrier = {};
     barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-    barrier.Transition.pResource = m_renderTargets[m_frameIndex].Get();
+    barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+    barrier.Transition.pResource = renderTargets_[frameIndex_].Get();
     barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
     barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
     barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-    m_commandList->ResourceBarrier(1, &barrier);
 
-    // レンダーターゲットビューを設定
-    D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_rtvHeap->GetCPUDescriptorHandleForHeapStart());
-    rtvHandle.ptr += m_frameIndex * m_rtvDescriptorSize;
-    m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
+    commandList_->ResourceBarrier(1, &barrier);
 
-    // 背景色でクリア
+    // Clear
+    D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = rtvHeap_->GetCPUDescriptorHandleForHeapStart();
+    rtvHandle.ptr += frameIndex_ * rtvDescriptorSize_;
     const float clearColor[] = { 0.2f, 0.3f, 0.4f, 1.0f };
-    m_commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
-}
+    commandList_->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
 
-void Renderer::EndRender() {
-    // バックバッファをレンダーターゲット → Presentに遷移
-    D3D12_RESOURCE_BARRIER barrier = {};
-    barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-    barrier.Transition.pResource = m_renderTargets[m_frameIndex].Get();
-    barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-    barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
-    barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-    m_commandList->ResourceBarrier(1, &barrier);
+    // Transition back
+    std::swap(barrier.Transition.StateBefore, barrier.Transition.StateAfter);
+    commandList_->ResourceBarrier(1, &barrier);
 
-    // コマンドリストを閉じる
-    m_commandList->Close();
+    commandList_->Close();
 
-    // コマンドリストを実行
-    ID3D12CommandList* ppCommandLists[] = { m_commandList.Get() };
-    m_commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+    // Execute
+    ID3D12CommandList* cmdLists[] = { commandList_.Get() };
+    commandQueue_->ExecuteCommandLists(_countof(cmdLists), cmdLists);
 
-    // スワップチェインで画面に表示
-    m_swapChain->Present(1, 0);
+    // Present
+    swapChain_->Present(1, 0);
 
-    // フレーム同期
-    const UINT64 currentFenceValue = m_fenceValue;
-    m_commandQueue->Signal(m_fence.Get(), currentFenceValue);
-    m_fenceValue++;
-
-    if (m_fence->GetCompletedValue() < currentFenceValue) {
-        m_fence->SetEventOnCompletion(currentFenceValue, m_fenceEvent);
-        WaitForSingleObject(m_fenceEvent, INFINITE);
-    }
-
-    m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
-}
-
-void Renderer::Release()
-{
-    // GPUがすべてのコマンドを完了するまで待機
-    if (m_commandQueue && m_fence && m_fenceEvent)
-    {
-        m_commandQueue->Signal(m_fence.Get(), m_fenceValue);
-        m_fence->SetEventOnCompletion(m_fenceValue, m_fenceEvent);
-        WaitForSingleObject(m_fenceEvent, INFINITE);
-        m_fenceValue++;
-    }
-
-    // フェンスイベントを閉じる
-    if (m_fenceEvent)
-    {
-        CloseHandle(m_fenceEvent);
-        m_fenceEvent = nullptr;
-    }
-
-    // 順番に解放（ComPtrなので Releaseは不要。nullptrで安全に消える）
-    m_commandList.Reset();
-    m_commandAllocator.Reset();
-    m_fence.Reset();
-    m_rtvHeap.Reset();
-    for (int i = 0; i < 2; ++i)
-    {
-        m_renderTargets[i].Reset();
-    }
-    m_swapChain.Reset();
-    m_commandQueue.Reset();
-    m_device.Reset();
-}
-/**********************************/
-//  以下内部関数
-/**********************************/
-
-bool Renderer::InitD3D12(HWND hWnd)
-{
-    UINT dxgiFactoryFlags = 0;
-
-    ComPtr<IDXGIFactory4> factory;
-    CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&factory));
-
-    // デバイス作成
-    D3D12CreateDevice(
-        nullptr, // デフォルトアダプター
-        D3D_FEATURE_LEVEL_11_0,
-        IID_PPV_ARGS(&m_device)
-    );
-
-    // コマンドキュー作成
-    D3D12_COMMAND_QUEUE_DESC queueDesc = {};
-    m_device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&m_commandQueue));
-
-    // スワップチェイン作成
-    DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
-    swapChainDesc.BufferCount = 2;
-    swapChainDesc.Width = 800;
-    swapChainDesc.Height = 600;
-    swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
-    swapChainDesc.SampleDesc.Count = 1;
-
-    ComPtr<IDXGISwapChain1> swapChain;
-    factory->CreateSwapChainForHwnd(
-        m_commandQueue.Get(),
-        hWnd,
-        &swapChainDesc,
-        nullptr,
-        nullptr,
-        &swapChain
-    );
-    swapChain.As(&m_swapChain);
-    m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
-
-    // ディスクリプタヒープ作成
-    D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
-    rtvHeapDesc.NumDescriptors = 2;
-    rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-    rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-    m_device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&m_rtvHeap));
-
-    m_rtvDescriptorSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-
-    D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = m_rtvHeap->GetCPUDescriptorHandleForHeapStart();
-
-    for (UINT i = 0; i < 2; i++)
-    {
-        m_swapChain->GetBuffer(i, IID_PPV_ARGS(&m_renderTargets[i]));
-        m_device->CreateRenderTargetView(m_renderTargets[i].Get(), nullptr, rtvHandle);
-        // 次のハンドル位置にオフセット
-        rtvHandle.ptr += m_rtvDescriptorSize;
-    }
-
-    // コマンドアロケータ＆コマンドリスト作成
-    m_device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&m_commandAllocator));
-    m_device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_commandAllocator.Get(), nullptr, IID_PPV_ARGS(&m_commandList));
-    m_commandList->Close();
-
-    // フェンス作成
-    m_device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_fence));
-    m_fenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
-
-    return true;
+    WaitForGPU();
 }

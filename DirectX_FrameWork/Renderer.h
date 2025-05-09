@@ -1,46 +1,43 @@
 #pragma once
-
-#include <windows.h>
 #include <wrl.h>
 #include <d3d12.h>
 #include <dxgi1_6.h>
+#include <cstdint>
 
-
-using Microsoft::WRL::ComPtr;
-
-// レンダラークラス（DirectX12の初期化・描画管理）
-class Renderer
-{
+class Renderer {
 public:
-    Renderer();
+    Renderer(HWND hwnd, uint32_t width, uint32_t height);
     ~Renderer();
 
-    bool Initialize(HWND hWnd);  // DirectX12初期化
-    void BeginRender();
-    void EndRender();
-    void Render();               // フレーム描画
-    void Release();              // リソース開放
+    void Initialize();
+    void Render();
 
 private:
-    bool InitD3D12(HWND hWnd);
-    bool CreateCommandObjects();
-    bool CreateSwapChain(HWND hwnd);
-    bool CreateRnderTargetViews();
+    void CreateDevice();
+    void CreateCommandQueue();
+    void CreateSwapChain(HWND hwnd, uint32_t width, uint32_t height);
+    void CreateDescriptorHeap();
+    void CreateRenderTargetViews();
+    void CreateCommandAllocatorsAndList();
+    void CreateFence();
+
+    void WaitForGPU();
 
 private:
-    static const UINT FrameCount = 2;
+    static const uint32_t FrameCount = 2;
 
-    ComPtr<ID3D12Device> m_device;
-    ComPtr<IDXGISwapChain3> m_swapChain;
-    ComPtr<ID3D12CommandQueue> m_commandQueue;
-    ComPtr<ID3D12DescriptorHeap> m_rtvHeap;
-    ComPtr<ID3D12Resource> m_renderTargets[2];
-    ComPtr<ID3D12CommandAllocator> m_commandAllocator;
-    ComPtr<ID3D12GraphicsCommandList> m_commandList;
-    ComPtr<ID3D12Fence> m_fence;
-    HANDLE m_fenceEvent;
-    UINT64 m_fenceValue;
+    Microsoft::WRL::ComPtr<ID3D12Device> device_;
+    Microsoft::WRL::ComPtr<IDXGISwapChain3> swapChain_;
+    Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue_;
+    Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvHeap_;
+    Microsoft::WRL::ComPtr<ID3D12Resource> renderTargets_[FrameCount];
+    Microsoft::WRL::ComPtr<ID3D12CommandAllocator> commandAllocators_[FrameCount];
+    Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList_;
 
-    UINT m_rtvDescriptorSize;
-    UINT m_frameIndex;
+    Microsoft::WRL::ComPtr<ID3D12Fence> fence_;
+    HANDLE fenceEvent_;
+    UINT64 fenceValues_[FrameCount] = {};
+
+    uint32_t rtvDescriptorSize_ = 0;
+    uint32_t frameIndex_ = 0;
 };
