@@ -1,27 +1,23 @@
-// InputManager.cpp
 #include "InputManager.h"
 
-InputManager::InputManager() {
-    Reset();
+void Input::Update() {
+    previousKeys = currentKeys;
+
+    currentKeys.clear();
+    for (int key = 0x01; key <= 0xFE; ++key) {
+        SHORT state = GetAsyncKeyState(key);
+        currentKeys[key] = (state & 0x8000) != 0;
+    }
 }
 
-void InputManager::OnKeyDown(WPARAM key) {
-    if (key < 256)
-        keys[key] = true;
+bool Input::IsKeyPressed(int keyCode) const {
+    return currentKeys.at(keyCode) && !previousKeys.at(keyCode);
 }
 
-void InputManager::OnKeyUp(WPARAM key) {
-    if (key < 256)
-        keys[key] = false;
+bool Input::IsKeyHeld(int keyCode) const {
+    return currentKeys.at(keyCode);
 }
 
-bool InputManager::IsKeyPressed(WPARAM key) const {
-    if (key < 256)
-        return keys[key];
-    return false;
-}
-
-void InputManager::Reset() {
-    for (int i = 0; i < 256; ++i)
-        keys[i] = false;
+bool Input::IsKeyReleased(int keyCode) const {
+    return !currentKeys.at(keyCode) && previousKeys.at(keyCode);
 }

@@ -1,24 +1,25 @@
-cbuffer ConstantBuffer : register(b0)
+// SimpleVertexShader.hlsl
+cbuffer cbChangePerObject : register(b0)
 {
-    float4x4 matWVP; // ワールド・ビュー・プロジェクション行列
+    matrix modelViewProj; // モデル変換行列
+}
+
+struct VS_INPUT
+{
+    float3 position : POSITION;
+    float2 texCoord : TEXCOORD0;
 };
 
-struct VSInput
+struct PS_INPUT
 {
-    float3 pos : POSITION;
-    float2 uv : TEXCOORD;
+    float4 position : SV_POSITION;
+    float2 texCoord : TEXCOORD0;
 };
 
-struct PSInput
+PS_INPUT main(VS_INPUT input)
 {
-    float4 pos : SV_POSITION;
-    float2 uv : TEXCOORD;
-};
-
-PSInput main(VSInput input)
-{
-    PSInput output;
-    output.pos = mul(float4(input.pos, 1.0f), matWVP);
-    output.uv = input.uv;
+    PS_INPUT output;
+    output.position = mul(float4(input.position, 1.0f), modelViewProj);
+    output.texCoord = input.texCoord;
     return output;
 }

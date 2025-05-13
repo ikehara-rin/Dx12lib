@@ -1,15 +1,16 @@
-// InputManager.h
 #pragma once
 #include <Windows.h>
+#include <unordered_map>
 
-class InputManager {
+class Input {
 public:
-    InputManager();
-    void OnKeyDown(WPARAM key);
-    void OnKeyUp(WPARAM key);
-    bool IsKeyPressed(WPARAM key) const;
-    void Reset(); // 1フレームごとのリセット用（必要に応じて）
+    void Update();  // 入力状態の更新（毎フレーム呼び出し）
+
+    bool IsKeyPressed(int keyCode) const;     // 押された瞬間
+    bool IsKeyHeld(int keyCode) const;        // 押され続けている
+    bool IsKeyReleased(int keyCode) const;    // 離された瞬間
 
 private:
-    bool keys[256]; // キー状態配列
+    std::unordered_map<int, bool> currentKeys;
+    std::unordered_map<int, bool> previousKeys;
 };

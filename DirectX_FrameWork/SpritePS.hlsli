@@ -1,7 +1,14 @@
-Texture2D tex0 : register(t0);
-SamplerState smp0 : register(s0);
+// SimplePixelShader.hlsl
+Texture2D shaderTexture : register(t0);
+SamplerState samplerState : register(s0);
 
-float4 main(float2 uv : TEXCOORD) : SV_TARGET
+struct PS_INPUT
 {
-    return tex0.Sample(smp0, uv);
+    float4 position : SV_POSITION;
+    float2 texCoord : TEXCOORD0;
+};
+
+float4 main(PS_INPUT input) : SV_TARGET
+{
+    return shaderTexture.Sample(samplerState, input.texCoord);
 }
