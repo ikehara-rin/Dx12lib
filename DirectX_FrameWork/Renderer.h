@@ -6,38 +6,44 @@
 
 class Renderer {
 public:
-    Renderer(HWND hwnd, uint32_t width, uint32_t height);
+    Renderer();
     ~Renderer();
 
-    void Initialize();
+    bool Initialize(HWND hwnd, uint32_t width, uint32_t height);
     void Render();
+    void Present();
+
+    // Getä÷êîåQ
+    Microsoft::WRL::ComPtr<ID3D12Device> GetDevice() const { return device; }
+    Microsoft::WRL::ComPtr<ID3D12CommandQueue> GetCommandQueue() const { return commandQueue; }
+    Microsoft::WRL::ComPtr<IDXGISwapChain4> GetSwapChain() const { return swapChain; }
+    Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> GetDescriptorHeap() const { return rtvHeap; }
+    UINT GetRTVDescriptorSize() const { return rtvDescriptorSize; }
+    Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> GetCommandList() const { return commandList; }
 
 private:
-    void CreateDevice();
-    void CreateCommandQueue();
-    void CreateSwapChain(HWND hwnd, uint32_t width, uint32_t height);
-    void CreateDescriptorHeap();
-    void CreateRenderTargetViews();
-    void CreateCommandAllocatorsAndList();
-    void CreateFence();
-
-    void WaitForGPU();
+    bool InitDevice();
+    bool InitCommandObjects();
+    bool InitSwapChain(HWND hwnd, uint32_t width, uint32_t height);
+    bool InitRenderTargetView();
+    void CreateCommandAllocatorAndList();
 
 private:
+    HWND hwnd;
+
     static const uint32_t FrameCount = 2;
 
-    Microsoft::WRL::ComPtr<ID3D12Device> device_;
-    Microsoft::WRL::ComPtr<IDXGISwapChain3> swapChain_;
-    Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue_;
-    Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvHeap_;
-    Microsoft::WRL::ComPtr<ID3D12Resource> renderTargets_[FrameCount];
-    Microsoft::WRL::ComPtr<ID3D12CommandAllocator> commandAllocators_[FrameCount];
-    Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList_;
+    Microsoft::WRL::ComPtr<IDXGIFactory6> factory;
+    Microsoft::WRL::ComPtr<ID3D12Device> device;
+    Microsoft::WRL::ComPtr<IDXGISwapChain4> swapChain;
 
-    Microsoft::WRL::ComPtr<ID3D12Fence> fence_;
-    HANDLE fenceEvent_;
-    UINT64 fenceValues_[FrameCount] = {};
+    Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue;
+    Microsoft::WRL::ComPtr<ID3D12CommandAllocator> commandAllocator;
+    Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList;
 
-    uint32_t rtvDescriptorSize_ = 0;
-    uint32_t frameIndex_ = 0;
+    Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvHeap;
+    Microsoft::WRL::ComPtr<ID3D12Resource> renderTargets[FrameCount];
+    UINT rtvDescriptorSize;
+
+    UINT frameIndex;
 };

@@ -3,20 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\InputManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|solutionrelative:InputManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\InputManager.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|solutionrelative:InputManager.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\TextureLoader.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|solutionrelative:TextureLoader.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\TextureLoader.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|solutionrelative:TextureLoader.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\SpriteVS.hlsli||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|solutionrelative:SpriteVS.hlsli||{8B382828-6202-11D1-8870-0000F87579D2}"
+      "AbsoluteMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\Renderer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|solutionrelative:Renderer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\Renderer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|solutionrelative:Renderer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\Sprite.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -27,20 +27,20 @@
       "RelativeMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|solutionrelative:Sprite.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\InputManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|solutionrelative:InputManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\InputManager.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|solutionrelative:InputManager.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\SpriteVS.hlsli||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|solutionrelative:SpriteVS.hlsli||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\VertexTypes.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|solutionrelative:VertexTypes.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\TextureLoader.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|solutionrelative:TextureLoader.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\Renderer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|solutionrelative:Renderer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\Renderer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|solutionrelative:Renderer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{E1F3D360-0F94-4057-BB15-905FCD029F46}|DirectX_FrameWork.vcxproj|C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\SpritePS.hlsli||{8B382828-6202-11D1-8870-0000F87579D2}",
@@ -54,21 +54,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 256,
-          "SelectedChildIndex": 11,
+          "SelectedChildIndex": 9,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Sprite.cpp",
-              "DocumentMoniker": "C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\Sprite.cpp",
-              "RelativeDocumentMoniker": "Sprite.cpp",
-              "ToolTip": "C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\Sprite.cpp",
-              "RelativeToolTip": "Sprite.cpp",
-              "ViewState": "AgIAABsAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-05-06T22:15:32.178Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
@@ -87,20 +74,33 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Sprite.cpp",
+              "DocumentMoniker": "C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\Sprite.cpp",
+              "RelativeDocumentMoniker": "Sprite.cpp",
+              "ToolTip": "C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\Sprite.cpp",
+              "RelativeToolTip": "Sprite.cpp",
+              "ViewState": "AgIAAKsAAAAAAAAAAAAAAH0AAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-05-06T22:15:32.178Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 5,
               "Title": "Sprite.h",
               "DocumentMoniker": "C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\Sprite.h",
               "RelativeDocumentMoniker": "Sprite.h",
               "ToolTip": "C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\Sprite.h",
               "RelativeToolTip": "Sprite.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-05-06T22:14:59.809Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 9,
               "Title": "VertexTypes.h",
               "DocumentMoniker": "C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\VertexTypes.h",
               "RelativeDocumentMoniker": "VertexTypes.h",
@@ -108,12 +108,11 @@
               "RelativeToolTip": "VertexTypes.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-05-11T06:59:21.971Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-11T06:59:21.971Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 8,
               "Title": "SpriteVS.hlsli",
               "DocumentMoniker": "C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\SpriteVS.hlsli",
               "RelativeDocumentMoniker": "SpriteVS.hlsli",
@@ -121,8 +120,7 @@
               "RelativeToolTip": "SpriteVS.hlsli",
               "ViewState": "AgIAAAIAAAAAAAAAAAAmwBkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2025-05-09T00:40:19.213Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-09T00:40:19.213Z"
             },
             {
               "$type": "Document",
@@ -134,25 +132,24 @@
               "RelativeToolTip": "SpritePS.hlsli",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2025-05-09T00:40:10.507Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-09T00:40:10.507Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 0,
               "Title": "TextureLoader.cpp",
               "DocumentMoniker": "C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\TextureLoader.cpp",
               "RelativeDocumentMoniker": "TextureLoader.cpp",
               "ToolTip": "C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\TextureLoader.cpp",
               "RelativeToolTip": "TextureLoader.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAACcAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-05-07T00:23:22.944Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "TextureLoader.h",
               "DocumentMoniker": "C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\TextureLoader.h",
               "RelativeDocumentMoniker": "TextureLoader.h",
@@ -165,7 +162,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 6,
               "Title": "InputManager.cpp",
               "DocumentMoniker": "C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\InputManager.cpp",
               "RelativeDocumentMoniker": "InputManager.cpp",
@@ -178,7 +175,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 7,
               "Title": "InputManager.h",
               "DocumentMoniker": "C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\InputManager.h",
               "RelativeDocumentMoniker": "InputManager.h",
@@ -191,26 +188,26 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 3,
               "Title": "Renderer.cpp",
               "DocumentMoniker": "C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\Renderer.cpp",
               "RelativeDocumentMoniker": "Renderer.cpp",
               "ToolTip": "C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\Renderer.cpp",
               "RelativeToolTip": "Renderer.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAJ8AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABIAAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-04-28T10:46:45.383Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 2,
               "Title": "Renderer.h",
               "DocumentMoniker": "C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\Renderer.h",
               "RelativeDocumentMoniker": "Renderer.h",
               "ToolTip": "C:\\Users\\kbc12206116\\Documents\\GitHub\\Dx12lib\\DirectX_FrameWork\\Renderer.h",
               "RelativeToolTip": "Renderer.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACsAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAC4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-04-28T10:46:34.527Z",
               "EditorCaption": ""

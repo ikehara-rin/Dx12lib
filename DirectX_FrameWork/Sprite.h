@@ -1,26 +1,28 @@
 #pragma once
-
 #include <d3d12.h>
 #include <wrl.h>
-#include <DirectXMath.h>
+#include <string>
+#include "Renderer.h"
 
 class Sprite {
 public:
-    Sprite(ID3D12Device* device, ID3D12GraphicsCommandList* cmdList);
+    Sprite();
     ~Sprite();
 
-    bool Initialize();
-    void Draw();
+    bool Load(Renderer* renderer, const std::wstring& filePath);
+    void Draw(float x, float y);
 
 private:
-    struct Vertex {
-        DirectX::XMFLOAT3 pos;
-        DirectX::XMFLOAT2 uv;
-    };
+    Renderer* renderer;
 
-    ID3D12Device* m_device;
-    ID3D12GraphicsCommandList* m_cmdList;
+    Microsoft::WRL::ComPtr<ID3D12Resource> texture;
+    Microsoft::WRL::ComPtr<ID3D12Resource> vertexBuffer;
+    D3D12_VERTEX_BUFFER_VIEW vbView{};
+    D3D12_GPU_DESCRIPTOR_HANDLE gpuDescHandle{};
 
-    Microsoft::WRL::ComPtr<ID3D12Resource> m_vertexBuffer;
-    D3D12_VERTEX_BUFFER_VIEW m_vbView{};
+    UINT textureWidth;
+    UINT textureHeight;
+
+    bool CreateVertexBuffer();
+    bool CreateTextureFromFile(const std::wstring& filePath);
 };
