@@ -1,5 +1,4 @@
 ﻿  Renderer.cpp
-  Sprite.cpp
-  TextureLoader.cpp
-  コードを生成中...
+Ole32.lib(ole32.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR は xaudio2.lib(XAudio2_9.dll) で定義されています。2 つ目以降の定義は無視されます。
+d3dcompiler.lib(D3DCOMPILER_47.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR は xaudio2.lib(XAudio2_9.dll) で定義されています。2 つ目以降の定義は無視されます。
   DirectX_FrameWork.vcxproj -> C:\Users\kbc12206116\Documents\GitHub\Dx12lib\DirectX_FrameWork\x64\Debug\DirectX_FrameWork.lib

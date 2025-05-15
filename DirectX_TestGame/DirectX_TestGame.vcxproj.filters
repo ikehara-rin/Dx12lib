@@ -51,4 +51,8 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="SpritePS.hlsli" />
+    <None Include="SpriteVS.hlsli" />
+  </ItemGroup>
 </Project>

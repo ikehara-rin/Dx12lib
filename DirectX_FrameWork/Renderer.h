@@ -12,6 +12,8 @@ public:
     bool Initialize(HWND hwnd, uint32_t width, uint32_t height);
     void Render();
     void Present();
+    void BeginFrame();
+    void EndFrame();
 
     // Getä÷êîåQ
     Microsoft::WRL::ComPtr<ID3D12Device> GetDevice() const { return device; }
@@ -20,6 +22,9 @@ public:
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> GetDescriptorHeap() const { return rtvHeap; }
     UINT GetRTVDescriptorSize() const { return rtvDescriptorSize; }
     Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> GetCommandList() const { return commandList; }
+    ID3D12DescriptorHeap* GetSRVHeap() const;
+    ID3D12PipelineState* GetPipelineState() const { return pipelineState.Get(); }
+    ID3D12RootSignature* GetRootSignature() const { return rootSignature.Get(); }
 
 private:
     bool InitDevice();
@@ -46,4 +51,16 @@ private:
     UINT rtvDescriptorSize;
 
     UINT frameIndex;
+
+    Microsoft::WRL::ComPtr<ID3D12Fence> fence;
+    uint64_t fenceValue = 0;
+    HANDLE fenceEvent = nullptr;
+
+    Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvHeap;
+    UINT srvDescriptorSize = 0;
+
+    Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState;
+    Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature;
+
+    bool CreatePipelineStateObjects();
 };

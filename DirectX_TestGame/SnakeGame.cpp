@@ -1,140 +1,181 @@
 #include "SnakeGame.h"
-#include <Windows.h>
 #include <cstdlib>
-#include <ctime>
+#include <Windows.h>
 
-extern const int cellSize = 32;
-extern ID3D12Resource* snakeTexture;
-extern ID3D12Resource* foodTexture;
-
-SnakeGame::SnakeGame(int fieldWidth, int fieldHeight, int cellSize)
-    : fieldWidth(fieldWidth), fieldHeight(fieldHeight),
-    moveTimer(0.0f), moveInterval(0.2f), grow(false)
+SnakeGame::SnakeGame(Renderer* renderer)
+    : renderer(renderer),currentDirection(Direction::Right), moveTimer(0.0f), moveInterval(0.2f),
+    gridWidth(20), gridHeight(15), cellSize(32.0f), isGameOver(false), score(0) 
 {
-    snake.push_back({ fieldWidth / 2, fieldHeight / 2 });
-    direction = { 1, 0 };
-
-    food = new Food(fieldWidth, fieldHeight);  // フード生成
+    spriteRenderer = new SpriteRenderer(renderer);
+    inputManager = new Input();
 }
 
 SnakeGame::~SnakeGame() {
+    delete spriteRenderer;
     delete food;
+    delete snake;
 }
 
-void SnakeGame::Initialize(HWND hwnd) {
-    renderer.Initialize();
-    spriteRenderer.Initialize(&renderer);
-
-    snake = new Snake(fieldWidth, fieldHeight);
+bool SnakeGame::Initialize() {
+    if (!spriteRenderer->Initialize()) {
+        OutputDebugStringA("SpriteRenderer Initialize failed\n");
+        return false;
+    }
+    food = new Food(gridWidth,gridHeight);
+    snake = new Snake(gridWidth, gridHeight, cellSize);
+    Reset();
+    return true;
 }
+
+//void SnakeGame::Reset() {
+//    moveTimer = 0.0f;
+//    isGameOver = false;
+//    score = 0;
+//    food->Respawn();
+//}
 
 void SnakeGame::Update(float deltaTime) {
-    HandleInput();
+    /*if (isGameOver) {
+        if (inputManager->IsKeyPressed(VK_SPACE)) {
+            Reset();
+        }
+        return;
+    }*/
+
     moveTimer += deltaTime;
-    if (moveTimer >= moveInterval) {
-        moveTimer -= moveInterval;
-        if (gameOver) return;
 
-        snake.Move();
+    inputManager->Update();
 
-        // 壁との衝突
-        int headX = snake.GetHeadX();
-        int headY = snake.GetHeadY();
-        if (headX < 0 || headX >= fieldWidth || headY < 0 || headY >= fieldHeight) {
-            gameOver = true;
-            return;
-        }
+    switch (gameState) {
+    case GameState::Title:
+        UpdateTitle(deltaTime);
+        break;
+    case GameState::Playing:
+        UpdatePlaying(deltaTime);
+        break;
+    case GameState::GameOver:
+        UpdateGameOver(deltaTime);
+        break;
+    }
 
-        // 自己衝突
-        if (snake.CheckSelfCollision()) {
-            gameOver = true;
-            return;
-        }
+    // 入力処理
+    if (inputManager->IsKeyPressed(VK_UP) && currentDirection != Direction::Down)
+        currentDirection = Direction::Up;
+    else if (inputManager->IsKeyPressed(VK_DOWN) && currentDirection != Direction::Up)
+        currentDirection = Direction::Down;
+    else if (inputManager->IsKeyPressed(VK_LEFT) && currentDirection != Direction::Right)
+        currentDirection = Direction::Left;
+    else if (inputManager->IsKeyPressed(VK_RIGHT) && currentDirection != Direction::Left)
+        currentDirection = Direction::Right;
 
-        // 食べ物との衝突
-        if (headX == food.GetX() && headY == food.GetY()) {
-            snake.Grow();
-            food.Respawn();
-        }
+    
+
+    
+
+}
+
+void SnakeGame::UpdateTitle(float) {
+    if (inputManager->IsKeyPressed(VK_RETURN)) {
+        Reset();
+        gameState = GameState::Playing;
     }
 }
 
-void SnakeGame::Move() {
-    DirectX::XMINT2 newHead = {
-        snake[0].x + direction.x,
-        snake[0].y + direction.y
-    };
-    snake.insert(snake.begin(), newHead);
+void SnakeGame::UpdatePlaying(float deltaTime) {
+    
 
-    if (!grow) {
-        snake.pop_back();
+    if (snake->CheckSelfCollision()) {
+        gameState = GameState::GameOver;
+        return;
     }
-    else {
-        grow = false;
+
+    if (snake->CheckCollision(food->GetX(), food->GetY())) {
+        snake->Grow();
+        food->Respawn();
+        score++;
     }
+    if (moveTimer >= moveInterval) {
+
+        snake->Update();
+        moveTimer = 0.0f;
+    }
+}
+
+void SnakeGame::UpdateGameOver(float) {
+    if (inputManager->IsKeyPressed(VK_RETURN)) {
+        gameState = GameState::Title;
+    }
+}
+void SnakeGame::Move() {
+    //DirectX::XMFLOAT2 head = snake.front();
+
+    //switch (currentDirection) {
+    //case Direction::Up:    head.y -= 1; break;
+    //case Direction::Down:  head.y += 1; break;
+    //case Direction::Left:  head.x -= 1; break;
+    //case Direction::Right: head.x += 1; break;
+    //}
+
+    //snake.push_front(head);
+
+    //// 食べ物との衝突でなければ末尾を削除
+    //if (static_cast<int>(head.x) == food->GetX() &&
+    //    static_cast<int>(head.y) == food->GetY()) {
+    //    score += 10;
+    //    food->Respawn();
+    //}
+    //else {
+    //    snake.pop_back();
+    //}
 }
 
 void SnakeGame::CheckCollision() {
-    // 壁との衝突チェック
-    if (snake[0].x < 0 || snake[0].x >= fieldWidth ||
-        snake[0].y < 0 || snake[0].y >= fieldHeight) {
-        // リセット
-        snake.clear();
-        snake.push_back({ fieldWidth / 2, fieldHeight / 2 });
-        direction = { 1, 0 };
-    }
+    //DirectX::XMFLOAT2 head = snake.front();
 
-    // 自分との衝突チェック
-    for (size_t i = 1; i < snake.size(); ++i) {
-        if (snake[0].x == snake[i].x && snake[0].y == snake[i].y) {
-            // リセット
-            snake.clear();
-            snake.push_back({ fieldWidth / 2, fieldHeight / 2 });
-            direction = { 1, 0 };
-            break;
+    //// 壁との衝突
+    //if (head.x < 0 || head.y < 0 || head.x >= gridWidth || head.y >= gridHeight) {
+    //    isGameOver = true;
+    //    return;
+    //}
+
+    //// 自分との衝突
+    //for (size_t i = 1; i < snake.size(); ++i) {
+    //    if (snake[i].x == head.x && snake[i].y == head.y) {
+    //        isGameOver = true;
+    //        return;
+    //    }
+    //}
+}
+
+void SnakeGame::Render(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList) 
+{
+    switch (gameState) {
+    case GameState::Title:
+        // TODO: タイトル画像やテキスト描画
+        break;
+    case GameState::Playing: {
+        for (const auto& segment : snake->GetSegments()) {
+            spriteRenderer->DrawCell(commandList,
+            segment.x * cellSize, segment.y * cellSize, cellSize);
         }
-    }
 
-    // フードとの当たり判定
-    if (snake[0].x == food->GetX() &&
-        snake[0].y == food->GetY()) {
-        grow = true;
-        food->Respawn();  // フード再生成
+        // DrawCell() を呼ぶ直前に
+        assert(commandList->Close() == E_FAIL); // Close()済みならここで true になる
+        spriteRenderer->DrawCell(commandList,
+        food->GetX() * cellSize, food->GetY() * cellSize, cellSize);
+        break;
     }
+    case GameState::GameOver:
+        // TODO: ゲームオーバー画面描画
+        /*if (isGameOver) {
+            DrawText(commandList, L"Game Over - SPACE to restart", 50, 50);
+        }*/
+        break;
+    }
+    
 }
 
-void SnakeGame::Render(SpriteRenderer& renderer) {
-    renderer.Clear();
-    DrawSnake(renderer);
-    DrawFood(renderer);
-    spriteRenderer.Render();
-    renderer.Present();
-}
-
-void SnakeGame::HandleInput() {
-    if (GetAsyncKeyState(VK_UP) & 0x8000) {
-        snake->ChangeDirection(Direction::Up);
-    }
-    else if (GetAsyncKeyState(VK_DOWN) & 0x8000) {
-        snake->ChangeDirection(Direction::Down);
-    }
-    else if (GetAsyncKeyState(VK_LEFT) & 0x8000) {
-        snake->ChangeDirection(Direction::Left);
-    }
-    else if (GetAsyncKeyState(VK_RIGHT) & 0x8000) {
-        snake->ChangeDirection(Direction::Right);
-    }
-}
-
-void SnakeGame::DrawSnake(SpriteRenderer& renderer) {
-    ID3D12GraphicsCommandList* commandList = renderer->GetCommandList();
-    for (const auto& segment : snake->GetSegments()) {
-        spriteRenderer.DrawCell(commandList, snakeTexture, segment.x, segment.y,cellSize); // textureIndexは0を仮使用
-    }
-}
-
-void SnakeGame::DrawFood(SpriteRenderer& renderer) {
-    ID3D12GraphicsCommandList* commandList = renderer->GetCommandList();
-    const auto& pos = food->GetPosition();
-    renderer.DrawCell(commandList, snakeTexture,pos.x, pos.y, cellSize ); // 赤いフード
+void SnakeGame::Reset() {
+    food->Respawn();
+    score = 0;
 }

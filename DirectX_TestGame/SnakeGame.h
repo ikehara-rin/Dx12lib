@@ -1,39 +1,58 @@
 #pragma once
-#include "Renderer.h"
+
 #include "SpriteRenderer.h"
+#include "InputManager.h"
 #include "Snake.h"
-#include "Direction.h"
 #include "Food.h"
+#include <deque>
+
+enum class GameState {
+    Title,
+    Playing,
+    GameOver
+};
 
 class SnakeGame {
 public:
-    SnakeGame(int fieldWidth, int fieldHeight, int cellSize);
+    SnakeGame(Renderer* renderer);
     ~SnakeGame();
-
-    void Initialize(HWND hwnd);
+    bool Initialize();
     void Update(float deltaTime);
-    void Render(SpriteRenderer& renderer);
+    void Render(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList);
 
 private:
+    enum class Direction {
+        Up,
+        Down,
+        Left,
+        Right
+    };
+
     void Move();
     void CheckCollision();
-    void HandleInput();
-    void DrawSnake(SpriteRenderer& renderer);
-    void DrawFood(SpriteRenderer& renderer);
+    void Reset();
 
-    Renderer renderer;
-    SpriteRenderer spriteRenderer;
-    Snake* snake = nullptr;
+    Renderer* renderer;
+    SpriteRenderer* spriteRenderer = nullptr;
+    Input* inputManager = nullptr;
+    Snake* snake;
+    Food* food;
 
-    std::vector<DirectX::XMINT2> snake;
-    DirectX::XMINT2 direction;
+    GameState gameState;
+
+    /*std::deque<DirectX::XMFLOAT2> snake;*/
+    Direction currentDirection;
     float moveTimer;
     float moveInterval;
 
-    bool gameOver = false;
-    const int fieldWidth = 25;
-    const int fieldHeight = 18;
+    int gridWidth;
+    int gridHeight;
+    float cellSize;
 
-    Food* food;
-    bool grow;
+    bool isGameOver;
+    int score;
+
+    void UpdateTitle(float deltaTime);
+    void UpdatePlaying(float deltaTime);
+    void UpdateGameOver(float deltaTime);
 };

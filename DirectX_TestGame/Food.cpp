@@ -16,7 +16,7 @@ void Food::Respawn() {
     y = std::rand() % fieldHeight;
 }
 
-void Food::Draw(ID3D12GraphicsCommandList* commandList, ID3D12Resource* texture, float cellSize) {
-    // DrawCell(commandList, texture, x, y, cellSize) ‚ðŽg—p
-    DrawCell(commandList, texture, static_cast<float>(x), static_cast<float>(y), cellSize);
+void Food::SetPosition(int x, int y) {
+    this->x = x;
+    this->y = y;
 }

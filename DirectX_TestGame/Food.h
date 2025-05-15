@@ -8,9 +8,10 @@ public:
     Food(int fieldWidth, int fieldHeight);
 
     void Respawn();
-    void Draw(ID3D12GraphicsCommandList* commandList, ID3D12Resource* texture, float cellSize);
+    //void Draw(ID3D12GraphicsCommandList* commandList, ID3D12Resource* texture, float cellSize);
     int GetX() const { return x; }
     int GetY() const { return y; }
+    void SetPosition(int x, int y);
 
 private:
     int fieldWidth;
